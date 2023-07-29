@@ -1,14 +1,18 @@
 import express, { Request, Response } from 'express';
 import { sequelize } from './database/db';
 import itemsRoutes from './routes/itemsRoutes';
+import recyclingRoutes from './routes/recyclingRoutes';
+import locationRoutes from './routes/locationRoutes';
 
 const app = express();
 app.use(express.json());
 
 app.use('/items', itemsRoutes);
+app.use('/recycling', recyclingRoutes);
+app.use(locationRoutes);
 
 app.get('/', (req: Request, res: Response) => {
-  res.json({ message: 'Welcome to the Recycling App.' });
+  res.json({ message: 'Welcome to the Green Planet App.' });
 });
 
 app.get('/test', (req: Request, res: Response) => {

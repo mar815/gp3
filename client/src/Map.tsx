@@ -1,0 +1,59 @@
+import React from "react";
+import GoogleMapReact from "google-map-react";
+
+const AnyReactComponent: React.FC<any> = ({ text }) => <div>{text}</div>;
+
+interface ItemType {
+  id: string;
+  name: string;
+  description: string;
+  protocol: string;
+  image: string;
+}
+
+interface Location {
+  lat: number;
+  lng: number;
+}
+
+interface Place {
+  id: string;
+  name: string;
+  location: Location;
+}
+
+interface MapProps {
+  item: ItemType; // your item type here
+  center: Location;
+  zoom: number;
+  places: Place[];
+}
+
+const Map: React.FC<MapProps> = ({ center, zoom, places }) => {
+
+  return (
+    <div style={{ height: "100vh", width: "100%" }}>
+      <GoogleMapReact bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_MAPS_API_KEY as string }} defaultCenter={center} defaultZoom={zoom}>
+        {/* Display places on this map */}
+        {places.map(place =>
+          <AnyReactComponent
+            key={place.id}
+            lat={place.location.lat}
+            lng={place.location.lng}
+            text={place.name}
+          />
+        )}
+      </GoogleMapReact>
+    </div>
+  );
+};
+
+Map.defaultProps = {
+  center: {
+    lat: 59.95,
+    lng: 30.33,
+  },
+  zoom: 11,
+};
+
+export default Map;
