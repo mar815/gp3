@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import Modal from '@mui/material/Modal';
-import { Item } from '../models/Item'; // replace with correct file location for Item interface
-import { PlaceData } from '../controllers/recyclingLocationsController'; // replace with correct location for PlaceData interface
+import { Item } from '../../server/models/Item'; // Updated path
+import { PlaceData } from '../../server/controllers/recyclingLocationsController'; // Updated path
 import axios from 'axios';
 import Map from './Map';
+
+// ... (rest of the component)
+
 
 interface RecyclingLocationsModalProps {
   open: boolean;

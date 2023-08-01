@@ -9,19 +9,13 @@ export class Item extends Model {
   public image!: string;
 }
 
-Item.init(
-  {
-    id: {
-      type: DataTypes.STRING,
-      primaryKey: true
-    },
-    name: DataTypes.STRING,
-    description: DataTypes.STRING,
-    protocol: DataTypes.STRING,
-    image: DataTypes.STRING
-  },
-  {
-    tableName: 'items',
-    sequelize
-  }
-);
+interface Item {
+  id: string;
+  name: string;
+  description: string;
+  protocol: string;
+  image: string;
+}
+
+
+

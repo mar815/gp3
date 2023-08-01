@@ -24,6 +24,8 @@ const GreenButton = styled(Button)({
   }
 });
 
+const defaultLocation = { lat: 0, lng: 0 };
+
 const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
   const theme = useTheme();
 
@@ -56,7 +58,12 @@ const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
         Recycling Locations
       </GreenButton>
 
-      <RecyclingLocationsModal open={openModal} handleClose={handleCloseModal} item={item} userLocation={userLocation} />
+      <RecyclingLocationsModal
+        open={openModal}
+        handleClose={handleCloseModal}
+        item={item}
+        userLocation={userLocation || defaultLocation}
+      />
     </div>
   );
 };
