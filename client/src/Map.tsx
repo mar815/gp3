@@ -1,68 +1,29 @@
-import React from "react";
-import GoogleMapReact from "google-map-react";
-import { PlaceData } from './types';
-
-interface AnyReactComponentProps {
-  text: string;
-  lat: number;
-  lng: number;
-}
-const AnyReactComponent: React.FC<AnyReactComponentProps> = ({ text }) => <div>{text}</div>;
-
-
-interface ItemType {
-  id: string;
-  name: string;
-  description: string;
-  protocol: string;
-  image: string;
-}
-
-interface Location {
-  lat: number;
-  lng: number;
-}
-
-interface Place {
-  id: string;
-  name: string;
-  location: Location;
-}
+import React from 'react';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 
 interface MapProps {
-  item: ItemType; // your item type here
-  center: Location;
-  zoom: number;
-  places: Place[];
+  locations: any[];
 }
 
-const Map: React.FC<MapProps> = ({ center, zoom, places }) => {
-
-  if (!places || places.length === 0) return <p>No locations found.</p> 
+const Map: React.FC<MapProps> = ({ locations }) => {
+  const defaultPosition = [37.7749, -122.4194];  // Example: San Francisco. Adjust accordingly or get the user's location.
 
   return (
-    <div style={{ height: "100vh", width: "100%" }}>
-      <GoogleMapReact bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_MAPS_API_KEY as string }} defaultCenter={center} defaultZoom={zoom}>
-        {/* Display places on this map */}
-        {places.map(place =>
-          <AnyReactComponent
-            key={place.id}
-            lat={place.location.lat}
-            lng={place.location.lng}
-            text={place.name}
-          />
-        )}
-      </GoogleMapReact>
-    </div>
+    <MapContainer center={defaultPosition} zoom={13} style={{ width: '100%', height: '400px' }}>
+      <TileLayer
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      />
+      {locations.map((location, index) => (
+        <Marker key={index} position={[location.lat, location.lng]}>
+          <Popup>
+            {location.name}<br />
+            {location.address}
+          </Popup>
+        </Marker>
+      ))}
+    </MapContainer>
   );
-};
-
-Map.defaultProps = {
-  center: {
-    lat: 59.95,
-    lng: 30.33,
-  },
-  zoom: 11,
 };
 
 export default Map;

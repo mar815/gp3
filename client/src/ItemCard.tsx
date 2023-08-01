@@ -1,63 +1,34 @@
 import React, { useState } from 'react';
 import { Button } from '@mui/material';
-import { styled } from '@mui/system';
-import { useTheme } from '@mui/material/styles';
 import RecyclingLocationsModal from './RecyclingLocationsModal';
-import { useLocation } from './LocationContext';
 import { Item } from './types';
-
-
 
 interface ItemCardProps {
   item: Item;
 }
 
-const GreenButton = styled(Button)({
-  background: 'green',
-  '&:hover': {
-    backgroundColor: 'darkgreen',
-  }
-});
-
-const defaultLocation = { lat: 0, lng: 0 };
-
 const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
-  const theme = useTheme();
+  const [modalOpen, setModalOpen] = useState(false);
 
-  const { userLocation } = useLocation();
-
-  const [openModal, setOpenModal] = useState(false);
-
-  const handleOpenModal = async () => {
-    setOpenModal(true);
+  const handleOpenModal = () => {
+    setModalOpen(true);
   };
 
   const handleCloseModal = () => {
-    setOpenModal(false);
+    setModalOpen(false);
   };
 
   return (
-    <div
-      className="item-card"
-      style={{ backgroundColor: theme.palette.background.default, color: theme.palette.text.primary }}
-    >
-      <h2 style={{ color: theme.palette.primary.main }}>{item.name}</h2>
+    <div className="item-card">
+      <h2>{item.name}</h2>
       <p>{item.description}</p>
-      <p style={{ fontStyle: 'italic', color: theme.palette.secondary.main }}>Protocol: {item.protocol}</p>
-
-      <GreenButton
-        variant="contained"
-        style={{ color: theme.palette.text.primary }}
-        onClick={handleOpenModal}
-      >
-        Recycling Locations
-      </GreenButton>
-
+      <h3>Recycling Protocol:</h3>
+      <p>{item.protocol}</p>
+      <Button onClick={handleOpenModal}>Recycling Locations</Button>
       <RecyclingLocationsModal
-        open={openModal}
-        handleClose={handleCloseModal}
+        isOpen={modalOpen}
+        onClose={handleCloseModal}
         item={item}
-        userLocation={userLocation || defaultLocation}
       />
     </div>
   );

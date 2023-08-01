@@ -1,65 +1,43 @@
-import React, { useState } from 'react';
-import Modal from '@mui/material/Modal';
-import { Item } from './types';
-import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { Modal } from '@mui/material';
 import Map from './Map';
-import { PlaceData } from './types'
-
+import { Item } from './types';
 
 interface RecyclingLocationsModalProps {
-  open: boolean;
-  handleClose: () => void;
+  isOpen: boolean;
+  onClose: () => void;
   item: Item;
-  userLocation: { lat: number; lng: number; };
 }
 
-const baseURL = ""; // fill in with server address
-const endpoint = ""; // fill in with endpoint to hit for recycling locations
+const RecyclingLocationsModal: React.FC<RecyclingLocationsModalProps> = ({ isOpen, onClose, item }) => {
+  const [locations, setLocations] = useState<any[]>([]);
 
-const RecyclingLocationsModal: React.FC<RecyclingLocationsModalProps> =
-  ({ open, handleClose, item, userLocation }) => {
-    const [recyclingCenters, setRecyclingCenters] = useState<PlaceData[]>([]);
-    const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    if (isOpen) {
+      // Fetch recycling locations for the provided item when the modal opens
+      const fetchRecyclingLocations = async () => {
+        try {
+          const response = await fetch(`/api/locations?item=${item.name}`);
+          const data = await response.json();
+          setLocations(data);
+        } catch (error) {
+          console.error('Error fetching recycling locations:', error);
+        }
+      };
 
-    const fetchRecyclingCenters = async () => {
-      setLoading(true);
-      try {
-        const response = await axios.get(
-          `${baseURL}/${endpoint}`, { params: { item: item.name, location: userLocation } }
-        );
-        setRecyclingCenters(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching recycling centers", error);
-        setLoading(false);
-      }
+      fetchRecyclingLocations();
     }
+  }, [isOpen, item]);
 
-    React.useEffect(() => {
-      if (open) {
-        fetchRecyclingCenters();
-      }
-    }, [open]);
-
-    return (
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <div>
-          <h2 id="modal-modal-title">Recycling Locations for {item.name}</h2>
-          <Map
-            center={userLocation}
-            zoom={10}
-            item={item}
-            places={recyclingCenters}
-          />
-          <button onClick={handleClose}>Close</button>
-        </div>
-      </Modal>
-    );
-  }
+  return (
+    <Modal open={isOpen} onClose={onClose}>
+      <div>
+        <h2>Recycling Locations for {item.name}</h2>
+        <Map locations={locations} />
+        <button onClick={onClose}>Close</button>
+      </div>
+    </Modal>
+  );
+};
 
 export default RecyclingLocationsModal;
