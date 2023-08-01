@@ -6,9 +6,25 @@ import ItemDetails from './ItemDetails';
 import { Typography } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme';
-import LocationSearchInput from './LocationSearchInput'; // New import
+import LocationSearchInput from './LocationSearchInput';
+import { LocationProvider, useLocation } from './LocationContext';
 
 function App() {
+
+  const { setUserLocation } = useLocation();
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const { latitude, longitude } = position.coords;
+        setUserLocation({ lat: latitude, lng: longitude });
+      });
+    } else {
+      console.warn("Geolocation is not supported by this browser.");
+    }
+  }, [setUserLocation]);
+
+
   useEffect(() => {
     fetch('/test')
       .then(res => res.json())
@@ -18,19 +34,25 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <div className="App">
-        <Router>
-          <Typography variant="h4" className="App-header" component="span" sx={{ color: '#086972' }}>
-            Green Planet
-          </Typography>
-          <LocationSearchInput /> {/* New component for location input */}
-          <Routes>
-            <Route path="/items/:id" element={<ItemDetails item={null} onClose={() => { }} />} />
-            <Route path="/" element={<Items />} />
-          </Routes>
-        </Router>
-      </div>
+
+      <LocationProvider>
+        <div className="App">
+
+          <Router>
+            <Typography variant="h4" className="App-header" component="span" sx={{ color: '#086972' }}>
+              Green Planet
+            </Typography>
+            <LocationSearchInput /> {/* New component for location input */}
+            <Routes>
+              <Route path="/items/:id" element={<ItemDetails item={null} onClose={() => { }} />} />
+              <Route path="/" element={<Items />} />
+            </Routes>
+          </Router>
+
+        </div>
+      </LocationProvider>
     </ThemeProvider>
+
   );
 }
 

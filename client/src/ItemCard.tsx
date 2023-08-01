@@ -3,6 +3,7 @@ import { Button } from '@mui/material';
 import { styled } from '@mui/system';
 import { useTheme } from '@mui/material/styles';
 import RecyclingLocationsModal from './RecyclingLocationsModal';
+import { useLocation } from './LocationContext';
 
 interface Item {
   id: string;
@@ -25,6 +26,9 @@ const GreenButton = styled(Button)({
 
 const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
   const theme = useTheme();
+
+  const { userLocation } = useLocation();
+
   const [openModal, setOpenModal] = useState(false);
 
   const handleOpenModal = async () => {
@@ -52,7 +56,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ item }) => {
         Recycling Locations
       </GreenButton>
 
-      <RecyclingLocationsModal open={openModal} handleClose={handleCloseModal} item={item} />
+      <RecyclingLocationsModal open={openModal} handleClose={handleCloseModal} item={item} userLocation={userLocation} />
     </div>
   );
 };
