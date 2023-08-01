@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
 import Modal from '@mui/material/Modal';
-import { Item } from '../../server/models/Item'; // Updated path
-import { PlaceData } from '../../server/controllers/recyclingLocationsController'; // Updated path
+import { Item } from './types';
 import axios from 'axios';
 import Map from './Map';
 
-// ... (rest of the component)
-
+interface PlaceData {
+  name: string;
+  vicinity: string;
+  rating?: number;
+}
 
 interface RecyclingLocationsModalProps {
   open: boolean;
   handleClose: () => void;
   item: Item;
-  userLocation: { lat: number; lng: number; }; // replace with correct location data type
+  userLocation: { lat: number; lng: number; };
 }
 
 const baseURL = ""; // fill in with server address
@@ -25,7 +27,7 @@ const RecyclingLocationsModal: React.FC<RecyclingLocationsModalProps> =
     const fetchRecyclingCenters = async () => {
       try {
         const response = await axios.get(
-          `${baseURL}/${endpoint}`, // use your server route to get recycling locations
+          `${baseURL}/${endpoint}`,
           {
             params: {
               item: item.name,
@@ -36,7 +38,6 @@ const RecyclingLocationsModal: React.FC<RecyclingLocationsModalProps> =
         setRecyclingCenters(response.data);
       } catch (error) {
         console.error("Error fetching recycling centers", error);
-        // add additional error handling as necessary
       }
     }
 

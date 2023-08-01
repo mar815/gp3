@@ -3,14 +3,9 @@ import { Container } from '@mui/material';
 import './App.scss';
 import ItemCard from './ItemCard';
 import SearchBar from './SearchBar';
+import { Item } from './types';
 
-interface Item {
-  id: string;
-  name: string;
-  description: string;
-  protocol: string;
-  image: string;
-}
+
 
 const Items = () => {
   const [items, setItems] = useState<Item[]>([]);

@@ -4,14 +4,9 @@ import { styled } from '@mui/system';
 import { useTheme } from '@mui/material/styles';
 import RecyclingLocationsModal from './RecyclingLocationsModal';
 import { useLocation } from './LocationContext';
+import { Item } from './types';
 
-interface Item {
-  id: string;
-  name: string;
-  description: string;
-  protocol: string;
-  image: string;
-}
+
 
 interface ItemCardProps {
   item: Item;
