@@ -1,16 +1,14 @@
 import express, { Request, Response } from 'express';
 import { sequelize } from './database/db';
 import itemsRoutes from './routes/itemsRoutes';
-import recyclingRoutes from './routes/recyclingRoutes';
+
 import locationRoutes from './routes/locationRoutes';
-import { getLocationsForItem } from './controllers/locationController';
 
 const app = express();
 app.use(express.json());
 
 app.use('/items', itemsRoutes);
-app.use('/recycling', recyclingRoutes);
-app.get('/api/locations', getLocationsForItem);
+
 app.use(locationRoutes);
 
 app.get('/', (req: Request, res: Response) => {
