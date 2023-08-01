@@ -1,26 +1,53 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
-class LocationSearchInput extends Component {
-  autocomplete: google.maps.places.Autocomplete | null = null;
-  autocompleteInput!: HTMLInputElement | null;
+interface State {
+  locations: any[];
+  input: string;
+}
 
-  componentDidMount() {
-    this.autocomplete = new google.maps.places.Autocomplete(this.autocompleteInput as HTMLInputElement, {
-      types: ['(cities)'],
-    });
+class LocationSearchInput extends Component<{}, State> {
+  state: State = {
+    locations: [],
+    input: ''
+  };
 
-    this.autocomplete.addListener('place_changed', this.handlePlaceChanged);
+  handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ input: event.target.value });
   }
 
-  handlePlaceChanged = () => {
-    const place = this.autocomplete?.getPlace();
-    // Extract city and state from the place object and pass them to your app
+  handleSearch = async () => {
+    const { input } = this.state;
+    if (!input) return; // Exit if input is empty
+
+    try {
+      const response = await axios.get('/api/locationSearch', {
+        params: {
+          input: input
+        }
+      });
+
+      const locations = response.data.results; // Assuming server responds with a 'results' array
+      this.setState({ locations });
+
+    } catch (error) {
+      console.error("Error fetching locations:", error);
+      // Additional error handling can be added here
+    }
   }
 
   render() {
+    const { input } = this.state;
+
     return (
       <div>
-        <input ref={input => (this.autocompleteInput = input)} placeholder="Enter your location" />
+        <input
+          value={input}
+          onChange={this.handleInputChange}
+          placeholder="Enter your location"
+        />
+        <button onClick={this.handleSearch}>Search</button>
+        {/* You can also display the 'locations' in a list or other format here */}
       </div>
     );
   }
