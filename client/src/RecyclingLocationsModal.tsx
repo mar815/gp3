@@ -3,12 +3,8 @@ import Modal from '@mui/material/Modal';
 import { Item } from './types';
 import axios from 'axios';
 import Map from './Map';
+import { PlaceData } from './types'
 
-interface PlaceData {
-  name: string;
-  vicinity: string;
-  rating?: number;
-}
 
 interface RecyclingLocationsModalProps {
   open: boolean;
@@ -23,21 +19,19 @@ const endpoint = ""; // fill in with endpoint to hit for recycling locations
 const RecyclingLocationsModal: React.FC<RecyclingLocationsModalProps> =
   ({ open, handleClose, item, userLocation }) => {
     const [recyclingCenters, setRecyclingCenters] = useState<PlaceData[]>([]);
+    const [loading, setLoading] = useState(false);
 
     const fetchRecyclingCenters = async () => {
+      setLoading(true);
       try {
         const response = await axios.get(
-          `${baseURL}/${endpoint}`,
-          {
-            params: {
-              item: item.name,
-              location: userLocation
-            }
-          }
+          `${baseURL}/${endpoint}`, { params: { item: item.name, location: userLocation } }
         );
         setRecyclingCenters(response.data);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching recycling centers", error);
+        setLoading(false);
       }
     }
 

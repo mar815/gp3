@@ -18,9 +18,15 @@ function App() {
       navigator.geolocation.getCurrentPosition((position) => {
         const { latitude, longitude } = position.coords;
         setUserLocation({ lat: latitude, lng: longitude });
-      });
+      },
+        (error) => {
+          console.warn('Geolocation permission denied.', error);
+          // Set to a default location (can be updated to a more acceptable default).
+          setUserLocation({ lat: 35.6895, lng: 139.6917 });
+        });
     } else {
       console.warn("Geolocation is not supported by this browser.");
+      setUserLocation({ lat: 35.6895, lng: 139.6917 });
     }
   }, [setUserLocation]);
 

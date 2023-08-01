@@ -1,4 +1,4 @@
-interface Item {
+export interface Item {
   id: string;
   name: string;
   description: string;
@@ -6,4 +6,13 @@ interface Item {
   image: string;
 }
 
-export { Item };
+export interface PlaceData {
+  id: string;
+  name: string;
+  location: {
+    lat: number;
+    lng: number;
+  };
+}
+
+

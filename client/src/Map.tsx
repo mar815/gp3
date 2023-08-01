@@ -1,7 +1,14 @@
 import React from "react";
 import GoogleMapReact from "google-map-react";
+import { PlaceData } from './types';
 
-const AnyReactComponent: React.FC<any> = ({ text }) => <div>{text}</div>;
+interface AnyReactComponentProps {
+  text: string;
+  lat: number;
+  lng: number;
+}
+const AnyReactComponent: React.FC<AnyReactComponentProps> = ({ text }) => <div>{text}</div>;
+
 
 interface ItemType {
   id: string;
@@ -30,6 +37,8 @@ interface MapProps {
 }
 
 const Map: React.FC<MapProps> = ({ center, zoom, places }) => {
+
+  if (!places || places.length === 0) return <p>No locations found.</p> 
 
   return (
     <div style={{ height: "100vh", width: "100%" }}>
